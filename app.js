@@ -93,3 +93,34 @@ const tlSplitPin = gsap.timeline({
     end: "100%",
   },
 });
+
+//Carrousel
+
+const swatches = document.querySelectorAll(".swatches img");
+const gallery = document.querySelector(".phone-gallery");
+const slides = document.querySelectorAll(".phone-gallery-container");
+
+let currentSwatch = "blue";
+let topIndex = 2;
+
+swatches.forEach((swatch, index) => {
+  //On récupère les coordonnées du téléphone sur la page (ils sont tous display mais cachés en dehors de la page.)
+  const coord = slides[index].getBoundingClientRect().left;
+  swatch.addEventListener("click", (e) => {
+    //quand on clique sur la pastille on récupère le nom de l'attribu de la pastille.
+    let swatchName = e.target.getAttribute("swatch");
+    let closeUp = document.querySelector("." + swatchName);
+
+    //check si on est sur la même swatch que celle cliquée pour eviter un fading bizarre.
+    if (currentSwatch === swatchName) return;
+    gsap.set(closeUp, { zIndex: topIndex });
+    gsap.fromTo(closeUp, { opacity: 0 }, { opacity: 1, duration: 1 });
+    //Increment zIndex;
+
+    //galery :
+    gsap.to(gallery, { x: -coord, duration: 1, ease: "back.out(1)" });
+
+    topIndex++;
+    currentSwatch = swatchName;
+  });
+});
